@@ -18,6 +18,16 @@ const uint BTN_A = 5, BTN_B = 6;
 #define I2C_SDA 14
 #define I2C_SCL 15
 
+// Preparar área de renderização para o display (ssd1306_width pixels por ssd1306_n_pages páginas)
+struct render_area frame_area = {
+    start_column : 0,
+    end_column : ssd1306_width - 1,
+    start_page : 0,
+    end_page : ssd1306_n_pages - 1
+};
+
+uint8_t ssd[ssd1306_buffer_length];
+
 void irq_handler(uint gpio, uint32_t events)
 {
     static absolute_time_t last_press = 0;
@@ -30,12 +40,34 @@ void irq_handler(uint gpio, uint32_t events)
             bool current_state = gpio_get(LED_GREEN);
             gpio_put(LED_GREEN, !current_state);
             printf("Botão A pressionado! LED Verde %s\n", current_state ? "desligado" : "ligado");
+            memset(ssd, 0, ssd1306_buffer_length);
+            render_on_display(ssd, &frame_area);
+            ssd1306_draw_string(ssd, 8, 10, "Green Light On");
+            render_on_display(ssd, &frame_area);
+            if (current_state)
+            {
+                memset(ssd, 0, ssd1306_buffer_length);
+                render_on_display(ssd, &frame_area);
+                ssd1306_draw_string(ssd, 8, 10, "Green Light Off");
+                render_on_display(ssd, &frame_area);
+            }
         }
         else if (gpio == BTN_B)
         {
             bool current_state = gpio_get(LED_BLUE);
             gpio_put(LED_BLUE, !current_state);
             printf("Botão B pressionado! LED Azul %s\n", current_state ? "desligado" : "ligado");
+            memset(ssd, 0, ssd1306_buffer_length);
+            render_on_display(ssd, &frame_area);
+            ssd1306_draw_string(ssd, 8, 10, "Blue Light On");
+            render_on_display(ssd, &frame_area);
+            if (current_state)
+            {
+                memset(ssd, 0, ssd1306_buffer_length);
+                render_on_display(ssd, &frame_area);
+                ssd1306_draw_string(ssd, 8, 10, "Blue Light Off");
+                render_on_display(ssd, &frame_area);
+            }
         }
         last_press = get_absolute_time();
     }
@@ -88,35 +120,11 @@ int main()
 {
     setup(); // Configurações iniciais
 
-    // Preparar área de renderização para o display (ssd1306_width pixels por ssd1306_n_pages páginas)
-    struct render_area frame_area = {
-        start_column : 0,
-        end_column : ssd1306_width - 1,
-        start_page : 0,
-        end_page : ssd1306_n_pages - 1
-    };
-
     calculate_render_area_buffer_length(&frame_area);
 
-    // zera o display inteiro
-    uint8_t ssd[ssd1306_buffer_length];
+    // Zera o display inteiro
     memset(ssd, 0, ssd1306_buffer_length);
     render_on_display(ssd, &frame_area);
-
-    if (gpio_get(LED_GREEN))
-    {
-        printf("OOOOI\n");
-        ssd1306_draw_char(ssd, 5, 0, 'G');
-        render_on_display(ssd, &frame_area);
-        sleep_ms(1000);
-    }
-    else if (gpio_get(LED_BLUE))
-    {
-        printf("OOOOI\n");
-        ssd1306_draw_char(ssd, 5, 0, 'B');
-        render_on_display(ssd, &frame_area);
-        sleep_ms(1000);
-    }
 
     while (true)
     {
@@ -127,6 +135,8 @@ int main()
             scanf(" %c", &leitura);
             if (leitura >= '0' && leitura <= '9')
             {
+                memset(ssd, 0, ssd1306_buffer_length);
+                render_on_display(ssd, &frame_area);
                 exibir_numero(pio, sm, leitura - '0');
                 ssd1306_draw_char(ssd, 8, 10, leitura);
                 render_on_display(ssd, &frame_area);
@@ -134,6 +144,8 @@ int main()
             }
             else if (isalpha(leitura))
             {
+                memset(ssd, 0, ssd1306_buffer_length);
+                render_on_display(ssd, &frame_area);
                 limpar_matriz(pio, sm);
                 ssd1306_draw_char(ssd, 8, 10, leitura);
                 render_on_display(ssd, &frame_area);
@@ -142,6 +154,8 @@ int main()
             else
             {
                 printf("Caractere inválido!\n");
+                memset(ssd, 0, ssd1306_buffer_length);
+                render_on_display(ssd, &frame_area);
             }
         }
     }
