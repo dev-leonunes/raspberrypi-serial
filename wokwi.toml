@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = 'build/raspberrypi-serial.uf2'
+elf = 'build/raspberrypi-serial.elf'
