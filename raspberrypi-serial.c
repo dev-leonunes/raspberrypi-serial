@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "pico/stdlib.h"
-#include "matriz_leds.h"
+#include "pio_matrix/matriz_leds.h"
 #include "hardware/pio.h"
 #include "hardware/i2c.h"
 #include "inc/ssd1306.h"
