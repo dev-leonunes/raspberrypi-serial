@@ -66,11 +66,13 @@ ou
 - ``assets``: Diretório contendo imagens do projeto.
 - ``build``: Diretório onde os arquivos compilados serão gerados.
 - ``inc``: Diretório contendo as bibliotecas de comunicação com o display oled.
+- ``pio_matrix``: Diretório contendo os arquivos da biblioteca para controle da matriz de LEDS.
+   - ``matriz_leds.c`` e ``matriz_leds.h``: Código fonte e cabeçalho para controle da matriz de LEDs.
+   - ``pio_matrix.pio``: Código PIO para controle da matriz de LEDs.
 - ``CMakeLists.txt``: Arquivo de configuração do CMake para o projeto.
+- ``diagram.json``: Diagrama de conexões dos componentes.
 - ``pico_sdk_import.cmake``: Arquivo de importação do SDK do Raspberry Pi Pico.
 - ``raspberrypi-serial.c``: Código fonte principal do projeto.
-- ``matriz_leds.c`` e ``matriz_leds.h``: Código fonte e cabeçalho para controle da matriz de LEDs.
-- ``diagram.json``: Diagrama de conexões dos componentes.
 - ``wokwi.toml``: Arquivo de configuração para simulação no Wokwi.
 
 ## Contribuição
